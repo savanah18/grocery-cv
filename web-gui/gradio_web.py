@@ -15,14 +15,14 @@ import time
 from custom_classes import classes
 from model_maps import models
 
-paths = {
-    'detect': '/data/students/gerry/repos/grocery-cv/aiml/outputs/2024-11-13/20-55-37/grocery-cv-detect-yolom-complete-data/train/weights/best.pt',
-    'segment': '/data/students/gerry/repos/grocery-cv/aiml/outputs/2024-11-14/00-45-20/grocery-cv-seg-yolon-complete-data/train/weights/best.pt'
-}
 
+import json
+file_path = 'model_paths.json'
+with open(file_path, 'r') as file:
+    paths = json.load(file)
 
-model_detect = YOLO(paths['detect'])  # Replace with your model path if different
-model_segment = YOLO(paths['segment'])  # Replace with your model path if different
+model_detect = YOLO(paths['detect'], task='detect')  # Replace with your model path if different
+model_segment = YOLO(paths['segment'], task='segment')  # Replace with your model path if different
 
 def video_frame_callback(img, task):
     start_time = time.time()
@@ -48,7 +48,7 @@ def video_frame_callback(img, task):
                 # print(cls, conf, model.device, img_tensor.device)
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
                 cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                cv2.putText(img, f"{cls} {conf:.2f}", (x1, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 1.1, (0, 255, 0), 2)
+                cv2.putText(img, f"{box.cls.item()} {cls} {conf:.2f}", (x1, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 1.1, (0, 255, 0), 2)
 
         # add mask xy to image
         if task == "segment" and result.masks is not None:
@@ -79,4 +79,4 @@ with gr.Blocks() as demo:
     input_img.stream(video_frame_callback, [input_img, task], [input_img], time_limit=30, stream_every=0.1)
 
 
-demo.launch(server_name="0.0.0.0", server_port=5001)
+demo.launch(server_name="0.0.0.0", server_port=3333)
