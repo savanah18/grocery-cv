@@ -12,14 +12,14 @@ from einops import rearrange
 import numpy as np
 
 import time
-from custom_classes import classes
-from model_maps import models
-
 
 import json
 file_path = 'model_paths.json'
 with open(file_path, 'r') as file:
     paths = json.load(file)
+with open('classes.json', 'r') as file:
+    classes = json.load(file)
+
 
 model_detect = YOLO(paths['detect'], task='detect')  # Replace with your model path if different
 model_segment = YOLO(paths['segment'], task='segment')  # Replace with your model path if different
@@ -35,20 +35,20 @@ def video_frame_callback(img, task):
     model = model_detect if task == "detection" else model_segment
     _model = paths[task]
     # inference
-    preds = model.predict(img_tensor, device='0')
+    preds = model.predict(img_tensor)
     for result in preds:
         #print(result.names[result.boxes.cls])
         if result.boxes is not None:
             for box in result.boxes:
                 if _model in ["yolo11m", "yolo11n-seg"]:
-                    cls = result.names[box.cls.item()]
+                    cls = result.names[str(int(box.cls.item()))]
                 else:
-                    cls = classes[box.cls.item()]
+                    cls = classes[str(int(box.cls.item()))]
                 conf = box.conf.item()
                 # print(cls, conf, model.device, img_tensor.device)
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
                 cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                cv2.putText(img, f"{box.cls.item()} {cls} {conf:.2f}", (x1, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 1.1, (0, 255, 0), 2)
+                cv2.putText(img, f"{str(int(box.cls.item()))} {cls} {conf:.2f}", (x1, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 1.1, (0, 255, 0), 2)
 
         # add mask xy to image
         if task == "segment" and result.masks is not None:
