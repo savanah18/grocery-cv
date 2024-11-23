@@ -1,0 +1,4 @@
+{
+    "detect": "/data/students/gerry/repos/grocery-cv/aiml/outputs/2024-11-15/08-39-03/grocery-cv-detect-yolon-complete-data/train/weights/best.pt",
+    "segment": "/data/students/gerry/repos/grocery-cv/aiml/outputs/2024-11-14/00-45-20/grocery-cv-seg-yolon-complete-data/train/weights/best.pt"
+}
