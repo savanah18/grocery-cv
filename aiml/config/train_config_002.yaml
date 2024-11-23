@@ -1,0 +1,9 @@
+base_dir: /data/students/gerry/repos/grocery-cv
+model:
+  model: ${..base_dir}/aiml/pretrained/yolo11n.pt
+train:
+  data: ${..base_dir}/aiml/coco_grocery.yaml
+  epochs: 100 #try for one epoch
+  device: [1]
+  workers: 8
+  project: grocery-cv-detect-yolon
