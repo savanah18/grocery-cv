@@ -35,6 +35,8 @@ def video_frame_callback(img, task):
     _model = paths[task]
     # inference
     preds = model.predict(img_tensor, device='1')
+    inference_time = time.time() - start_time
+    cv2.putText(img, f"Inference Time: {inference_time:.2f}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.1, (0, 255, 0), 2)
     for result in preds:
         #print(result.names[result.boxes.cls])
         if result.boxes is not None:
@@ -44,10 +46,9 @@ def video_frame_callback(img, task):
                 else:
                     cls = classes[str(int(box.cls.item()))]
                 conf = box.conf.item()
-                if conf > 0.5:
-                    x1, y1, x2, y2 = map(int, box.xyxy[0])
-                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                    cv2.putText(img, f"{str(int(box.cls.item()))} {cls} {conf:.2f}", (x1, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 1.1, (0, 255, 0), 2)
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.putText(img, f"{cls} {conf:.2f}", (x1, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 1.1, (0, 255, 0), 2)
 
         if task == "segment" and result.masks is not None:
             for mask in result.masks.xy:
@@ -74,4 +75,4 @@ with gr.Blocks() as demo:
     input_img.stream(video_frame_callback, [input_img, task], [input_img], time_limit=30, stream_every=0.1)
 
 
-demo.launch(server_name="0.0.0.0")
+demo.launch(server_name="0.0.0.0", server_port=3123)
