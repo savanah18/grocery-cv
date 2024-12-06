@@ -1,4 +1,4 @@
 {
-    "detect": "/data/students/gerry/repos/grocery-cv/aiml/outputs/2024-11-15/08-39-03/grocery-cv-detect-yolon-complete-data/train/weights/best.pt",
-    "segment": "/data/students/gerry/repos/grocery-cv/aiml/outputs/2024-11-14/00-45-20/grocery-cv-seg-yolon-complete-data/train/weights/best.pt"
+    "detect": "/data/students/gerry/repos/grocery-cv/aiml/outputs/2024-12-06/06-39-41/grocery-cv-detect-yolox-v3-004/train/weights/best.pt",
+    "segment": "/data/students/gerry/repos/grocery-cv/aiml/outputs/2024-12-05/07-05-01/grocery-cv-detect-yolol-seg-v3-002/train/weights/best.pt"
 }
