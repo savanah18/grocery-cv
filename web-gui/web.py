@@ -1,6 +1,8 @@
 import streamlit as st
 from streamlit_webrtc import webrtc_streamer
 from ultralytics import YOLO
+from twilio.rest import Client
+from aiortc.mediastreams import MediaStreamTrack
 
 import av
 import cv2
@@ -11,6 +13,14 @@ import numpy as np
 import time
 
 
+            # add mask xy to image
+            if task == "segmentation" and result.masks is not None:
+                for mask in result.masks.xy:
+                    # create polygon from a series of mask points
+                    points = np.int32([mask])
+                    # print(points)
+                    print(points.shape)
+                    cv2.fillPoly(img, points, (0, 255, 0))
 
 classes = {
   0: "background",

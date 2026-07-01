@@ -1,0 +1,12 @@
+base_dir: /data/students/gerry/repos/grocery-cv
+model:
+  model: ${..base_dir}/aiml/pretrained/grocery-seg-pretrained-v1.pt
+train:
+  data: ${..base_dir}/aiml/coco_grocery.yaml
+  epochs: 200 #try for one epoch
+  patience: 100 
+  device: [1]
+  batch: 16
+  workers: 8
+  project: grocery-cv-detect-yolol-seg-v3-002
+  plots: true
